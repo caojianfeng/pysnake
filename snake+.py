@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# author: caojianfeng(windcao@hotmail.com)
 import pygame
 import time
 import random
@@ -49,7 +48,7 @@ def randomPos(leng):
 
 
 def move():
-    global snake, food, is_gameover
+    global snake, food, direct_x, direct_y, is_gameover
     x, y = snake[0]
     if x < 0 or x >= SCREEN_W or y < 0 or y >= SCREEN_H or snake[0] in snake[1:]:
         is_gameover = True
@@ -62,13 +61,29 @@ def move():
 
 
 def draw(win):
+    game_over = [
+        (3, 2), (4, 2), (5, 2), (6, 2), (2, 3), (2, 4), (2, 5), (3, 6), (4, 6),
+        (5, 6), (6, 6), (6, 5), (6, 4), (5, 4),  # G
+        (9, 4), (9, 5), (9, 6), (10, 3), (11, 2), (12, 3), (13, 4), (13, 5),
+        (13, 6), (10, 5), (11, 5), (12, 5),  # A
+        (16, 2), (16, 3), (16, 4), (16, 5), (16, 6), (17, 3), (18, 4), (19, 3),
+        (20, 2), (20, 3), (20, 4), (20, 5), (20, 6),  # M
+        (23, 2), (24, 2), (25, 2), (26, 2), (27, 2), (23, 3), (23, 4), (23, 5),
+        (23, 6), (24, 6), (25, 6), (26, 6), (27, 6), (24, 4), (25, 4),  # E
+        (2, 10), (2, 11), (2, 12), (3, 9), (4, 9), (5, 9), (6, 10), (6, 11),
+        (6, 12), (3, 13), (4, 13), (5, 13),  # O
+        (9, 9), (9, 10), (9, 11), (13, 9), (13, 10), (13, 11), (10, 12),
+        (11, 13), (12, 12),  # V
+        (16, 9), (17, 9), (18, 9), (19, 9), (20, 9), (16, 10), (16, 11), (16, 12),
+        (16, 13), (17, 13), (18, 13), (19, 13), (20, 13), (17, 11), (18, 11),  # E
+        (23, 9), (23, 10), (23, 11), (23, 12), (23, 13), (24, 9), (25, 9), (26, 9),
+        (24, 11), (25, 11), (26, 11), (27, 10), (27, 12), (27, 13)]  # R
     if is_gameover:
-        game_over = pygame.font.Font(None, 60).render("GAME OVER", True, COLOR)
-        game_over_rect = game_over.get_rect()
-        game_over_rect.center = (SCREEN_W/2, SCREEN_H/2)
-        win.blit(game_over, game_over_rect)
+        snake = list(map(
+            lambda pos: ((pos[0]+17)*CELL_SIZE, (pos[1]+8)*CELL_SIZE), game_over))
+    else:
+        drawNode(win, food)
 
-    drawNode(win, food)
     for node in snake:
         drawNode(win, node)
 
@@ -95,5 +110,4 @@ if __name__ == "__main__":
         move()
         draw(win)
         pygame.display.flip()
-
     pygame.quit()
